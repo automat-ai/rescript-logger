@@ -1,5 +1,7 @@
 # bs-log
 
+Forked from `shakacode/rescript-logger` because of our own specific needs.
+
 [![npm version](https://img.shields.io/npm/v/bs-log.svg?style=flat-square)](https://www.npmjs.com/package/bs-log)
 [![license](https://img.shields.io/npm/l/bs-log.svg?style=flat-square)](https://www.npmjs.com/package/bs-log)
 
@@ -8,6 +10,7 @@ Logging implementation for [ReasonML](https://reasonml.github.io) / [BuckleScrip
 ![bs-log](./.assets/example.png)
 
 ## Features
+
 - Zero runtime in production builds.
 - Multiple logging levels.
 - Customizable verbosity via environment variable.
@@ -17,6 +20,7 @@ Logging implementation for [ReasonML](https://reasonml.github.io) / [BuckleScrip
 - Logging in libraries.
 
 ## Installation
+
 Get the package:
 
 ```shell
@@ -38,7 +42,9 @@ Then add it to `bsconfig.json`:
 PPX is highly recommended but optional (read details below).
 
 ## Usage
+
 There are 5 log levels:
+
 - `trace`
 - `debug`
 - `info`
@@ -58,6 +64,7 @@ BrowserLogger.info(__MODULE__, "Info level message");
 If you use PPX, value of `__MODULE__` variable will be injected automatically.
 
 ### Additional data
+
 You can add data to log entry like this:
 
 ```reason
@@ -82,6 +89,7 @@ BrowserLogger.infoWithData2(
 Currently, logger can accept up to 7 additional entries.
 
 ### Verbosity customization
+
 You can set maximum log level via environment variable `BS_LOG`. This feature is available only when you use PPX.
 
 Let's say you want to log only warnings and errors. To make it happen, run your build like this:
@@ -91,6 +99,7 @@ BS_LOG=warn bsb -clean-world -make-world
 ```
 
 Available `BS_LOG` values:
+
 - `*`: log everything
 - `trace`: basically, the same as `*`
 - `debug`: log everything except `trace` level messages
@@ -106,11 +115,13 @@ In case if `BS_LOG` environment variable is not set, log level `warn` will be us
 Also, see [Usage in libraries](#usage-in-libraries).
 
 ### PPX vs non-PPX
+
 PPX gives you ability to customize maximum log level of your build and eliminates unwanted log entries from production builds. Also, it enables `ReasonReact` integration. If for some reason you want to use non-PPX api, then you have to handle elimination of log entries yourself on post-compilation stage.
 
 Default logger compiles log entries to `console.*` method calls so those are discardable via [UglifyJS](https://github.com/mishoo/UglifyJS2#compress-options)/[TerserJS](https://github.com/terser-js/terser#compress-options) or [Babel plugin](https://babeljs.io/docs/en/babel-plugin-transform-remove-console).
 
 ### `[@log]` helper
+
 This helper can be placed in front of any `switch` expression with constructor patterns and it will inject debug expressions into each branch.
 
 ```reason
@@ -138,6 +149,7 @@ You can pass optional custom namespace to helper like this: `[@log "MyNamespace"
 `[@log]` helper works only for `switch` expressions with constructor patterns, for now. Let us know [in the issues](/issues) if you need to handle more cases.
 
 ### `ReasonReact` integration
+
 Using `[@log]` helper, you can log dispatched actions in your components.
 
 Annotate `reducer` function like this:
@@ -151,7 +163,9 @@ let reducer = (state, action) => [@log] switch (action) {
 These entries are logged on the `debug` level so none of those will appear in production builds.
 
 ### Custom loggers
+
 `bs-log` ships with 2 loggers:
+
 - `BrowserLogger` (default)
 - `NodeLogger`
 
@@ -200,6 +214,7 @@ let errorWithData2 = (
 You don't have to re-implement all functions from default logger, only the ones you actually use. Don't worry to forget to implement something. If later on, you will attempt to use unimplemented method it will be compile time error.
 
 ### Usage in libraries
+
 I you are developing a library and want to use `bs-log` during development process, you can do so without spamming output of consumers of your library.
 
 `bs-log/ppx` accepts `--lib` flag:
@@ -239,6 +254,7 @@ BS_LOG=*,my-lib-1=error,my-lib-2=warn bsb -make-world
 ```
 
 ## Caveats
+
 **Logging is disabled after file save**<br />
 If you run `bsb` via editor integration, make sure editor picked up `BS_LOG` variable. E.g. if you use Atom run it like this:
 
@@ -247,6 +263,7 @@ BS_LOG=info atom .
 ```
 
 If your editor is telling you, variables used in ppx are unused, you can either:
+
 1. prefix such variables with `_`
 2. or open editor with `BS_LOG` variable set to appropriate level.
 
@@ -254,7 +271,9 @@ If your editor is telling you, variables used in ppx are unused, you can either:
 When you change a value of `BS_LOG` and/or `BS_LOGGER`, `-clean-world` before the next build.
 
 ## Developing
+
 Repo consists of 2 parts:
+
 - BuckleScript loggers: dependencies are managed by `yarn`
 - Dune ppx: dependencies are managed by `esy`
 

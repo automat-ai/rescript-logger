@@ -1,5 +1,5 @@
 {
-  "name": "bs-log",
+  "name": "@automat-ai/bs-log",
   "version": "1.3.0",
   "description": "Logging implementation for ReasonML/BuckleScript",
   "author": "Alex Fedoseev <alex.fedoseev@gmail.com>",
